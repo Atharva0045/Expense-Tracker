@@ -1,11 +1,11 @@
-import { useMemo } from 'react'
+import { useMemo, forwardRef } from 'react'
 import {
   PieChart, Pie, LineChart, Line, XAxis, YAxis, Tooltip, Cell, ResponsiveContainer
 } from 'recharts'
 import CategoryFilter from './CategoryFilter'
 import { getCategoryColor } from '../utils/colors'
 
-function Charts({ expenses, selectedCategory, selectedDate, onCategoryChange, onDateChange }) {
+const Charts = forwardRef(({ expenses, selectedCategory, selectedDate, onCategoryChange, onDateChange }, ref) => {
   const filteredExpenses = expenses.filter(expense => {
     const categoryMatch = selectedCategory === 'all' || expense.category === selectedCategory
     const date = new Date(expense.date)
@@ -45,7 +45,7 @@ function Charts({ expenses, selectedCategory, selectedDate, onCategoryChange, on
           onDateChange={onDateChange}
         />
       </div>
-      <div className="flex-1 min-h-0 grid grid-cols-2 gap-3">
+      <div ref={ref} className="flex-1 min-h-0 grid grid-cols-2 gap-3">
         <div className="flex flex-col">
           <h3 className="text-sm font-semibold text-cyan-200 mb-1">Category Distribution</h3>
           <div className="flex-1 min-h-0">
@@ -137,6 +137,7 @@ function Charts({ expenses, selectedCategory, selectedDate, onCategoryChange, on
       </div>
     </div>
   )
-}
+})
 
+Charts.displayName = 'Charts'
 export default Charts

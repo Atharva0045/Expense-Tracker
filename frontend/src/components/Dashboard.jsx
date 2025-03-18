@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import ExpenseForm from './ExpenseForm'
 import ExpenseList from './ExpenseList'
 import Charts from './Charts'
@@ -14,6 +14,7 @@ function Dashboard() {
   const [selectedDate, setSelectedDate] = useState({ month: 'all', year: 'all', day: 'all' })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const chartsRef = useRef(null)
 
   // Function to fetch expenses
   const fetchExpenses = useCallback(async () => {
@@ -95,6 +96,7 @@ function Dashboard() {
           <div className="col-span-6">
             <div className="h-[500px]">
               <Charts 
+                ref={chartsRef}
                 expenses={expenses}
                 selectedCategory={selectedCategory}
                 selectedDate={selectedDate}
@@ -106,7 +108,10 @@ function Dashboard() {
 
           {/* Right Column */}
           <div className="col-span-3 max-h-full overflow-auto">
-            <Report expenses={expenses} />
+            <Report 
+              expenses={expenses} 
+              charts={chartsRef}
+            />
           </div>
         </div>
       </div>

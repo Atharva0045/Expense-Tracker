@@ -19,18 +19,13 @@ requiredEnvVars.forEach(envVar => {
 });
 
 // CORS configuration
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
-app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS not allowed'));
-    }
-    return callback(null, true);
-  },
-  credentials: true
-}));
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGINS.split(','),
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 // Add body parsing middleware before routes
 app.use(express.json());
@@ -58,7 +53,7 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date(),
     env: process.env.NODE_ENV,
     cors: {
-      allowedOrigins,
+      allowedOrigins: process.env.ALLOWED_ORIGINS.split(','),
       requestOrigin: req.headers.origin
     },
     database: {
